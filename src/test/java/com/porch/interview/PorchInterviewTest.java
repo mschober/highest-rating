@@ -41,4 +41,10 @@ public class PorchInterviewTest {
         PorchInterview pi = readReviewsList("highest_average_review.tsv");
         assertEquals(9001, getHighestRatedPro(pi.getReviews()));
     }
+
+    @Test
+    public void testLargeSet() throws IOException, ParseException {
+        PorchInterview pi = readReviewsList("random_reviews.tsv");
+        assertEquals(3444, getHighestRatedPro(pi.getReviews()));
+    }
 }

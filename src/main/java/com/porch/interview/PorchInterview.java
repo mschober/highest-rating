@@ -149,19 +149,19 @@ public class PorchInterview {
 
     // implement this function
     public static int getHighestRatedPro(List<Review> reviews) {
-        HashMap<ProKey, Average> highestAverage = new HashMap<ProKey, Average>(); //prokey, average
-        Average a = new Average(1);
+        HashMap<ProKey, LimitedRunningAverage> highestAverage = new HashMap<ProKey, LimitedRunningAverage>(); //prokey, average
+        LimitedRunningAverage a = new LimitedRunningAverage(1);
         double currentAverage = 0;
         double winningAverage = 0;
         ProKey winningKey = null;
         for(Review r : reviews){
             ProKey pk = new ProKey(r);
-            Average avg;
+            LimitedRunningAverage avg;
             if(highestAverage.containsKey(pk)){
                 avg = highestAverage.get(pk);
                 highestAverage.put(pk, avg.update(r.getRating()));
             } else {
-                avg = new Average(r.getRating());
+                avg = new LimitedRunningAverage(r.getRating());
                 highestAverage.put(pk, avg);
             }
             currentAverage = avg.average();
@@ -172,6 +172,8 @@ public class PorchInterview {
             }
 //            System.out.println(highestAverage.entrySet());
         }
+//        System.out.println(highestAverage.get(winningKey).num_reviews());
+//        System.out.println(highestAverage.get(winningKey).average());
 
         return winningKey.key();
     }
