@@ -20,12 +20,12 @@ public class PorchInterviewTest {
     public void setUp() throws IOException, ParseException {
         URL file = this.getClass().getResource("/reviews/reviews");
         CSVReader reader = new CSVReader(new FileReader(file.getFile()), '\t');
-        String[] header = reader.readNext();
+        //String[] header = reader.readNext();
         this.pi = new PorchInterview(reader.readAll());
     }
 
     @Test
     public void testCountReviews() throws IOException, ParseException {
-        assertEquals(10, PorchInterview.countReviews(this.pi.getReviews()));
+        assertEquals(100000, PorchInterview.countReviews(this.pi.getReviews()));
     }
 }
