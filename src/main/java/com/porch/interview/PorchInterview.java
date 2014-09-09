@@ -9,8 +9,6 @@ Please state any assumptions.
 You will be evaluated based on code clarity, code quality, and efficiency.
 */
 
-import au.com.bytecode.opencsv.CSVReader;
-
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -22,10 +20,9 @@ import java.util.List;
 public class PorchInterview {
     private final ArrayList<Review> reviews;
 
-    public PorchInterview(CSVReader reviews) throws IOException, ParseException {
+    public PorchInterview(List<String[]> reviews) throws IOException, ParseException {
         List<Review> reviewList = new ArrayList<Review>();
-        String[] header = reviews.readNext();
-        for(String[] reviewLine : reviews.readAll()){
+        for(String[] reviewLine: reviews) {
             reviewList.add(new Review(reviewLine));
         }
         this.reviews = new ArrayList<Review>(reviewList);
@@ -108,6 +105,10 @@ public class PorchInterview {
             return reviewDate;
         }
 
+    }
+
+    public static int countReviews(List<Review> reviews){
+        return reviews.size();
     }
 
     // implement this function

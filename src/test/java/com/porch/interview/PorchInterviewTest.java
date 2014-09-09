@@ -2,6 +2,7 @@ package com.porch.interview;
 
 
 import au.com.bytecode.opencsv.CSVReader;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.FileReader;
@@ -13,11 +14,18 @@ import static org.junit.Assert.assertEquals;
 
 public class PorchInterviewTest {
 
-    @Test
-    public void testExample() throws IOException, ParseException {
-        URL file = this.getClass().getResource("/reviews/10000");
+    private PorchInterview pi;
+
+    @Before
+    public void setUp() throws IOException, ParseException {
+        URL file = this.getClass().getResource("/reviews/reviews");
         CSVReader reader = new CSVReader(new FileReader(file.getFile()), '\t');
-        PorchInterview interview = new PorchInterview(reader);
-        assertEquals(1, PorchInterview.getHighestRatedPro(interview.getReviews()));
+        String[] header = reader.readNext();
+        this.pi = new PorchInterview(reader.readAll());
+    }
+
+    @Test
+    public void testCountReviews() throws IOException, ParseException {
+        assertEquals(10, PorchInterview.countReviews(this.pi.getReviews()));
     }
 }
