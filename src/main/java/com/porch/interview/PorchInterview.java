@@ -48,6 +48,28 @@ public class PorchInterview {
         public int key() {
             return this.proKey;
         }
+
+        @Override
+        public String toString(){
+            return String.valueOf(key());
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            ProKey proKey1 = (ProKey) o;
+
+            if (proKey != proKey1.proKey) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            return proKey;
+        }
     }
 
     private class Review {
@@ -134,17 +156,21 @@ public class PorchInterview {
         ProKey winningKey = null;
         for(Review r : reviews){
             ProKey pk = new ProKey(r);
-            Average avg = new Average(r.getRating());
+            Average avg;
             if(highestAverage.containsKey(pk)){
+                avg = highestAverage.get(pk);
                 highestAverage.put(pk, avg.update(r.getRating()));
             } else {
+                avg = new Average(r.getRating());
                 highestAverage.put(pk, avg);
             }
             currentAverage = avg.average();
+            winningAverage = winningKey != null? highestAverage.get(winningKey).average(): 0;
             if(currentAverage > winningAverage){
                 winningAverage = currentAverage;
                 winningKey = pk;
             }
+//            System.out.println(highestAverage.entrySet());
         }
 
         return winningKey.key();
