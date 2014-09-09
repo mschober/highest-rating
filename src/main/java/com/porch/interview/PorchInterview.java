@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class PorchInterview {
@@ -34,6 +35,19 @@ public class PorchInterview {
 
     public Review createReview(String[] reviewLine) throws ParseException {
         return new Review(reviewLine);
+    }
+
+    private static class ProKey {
+
+        private final int proKey;
+
+        public ProKey(Review r) {
+            this.proKey = r.getProKey();
+        }
+
+        public int key() {
+            return this.proKey;
+        }
     }
 
     private class Review {
@@ -113,7 +127,26 @@ public class PorchInterview {
 
     // implement this function
     public static int getHighestRatedPro(List<Review> reviews) {
-        System.out.println(reviews.get(0).getReviewDate());
-        return reviews.size();
+        HashMap<ProKey, Average> highestAverage = new HashMap<ProKey, Average>(); //prokey, average
+        Average a = new Average(1);
+        double currentAverage = 0;
+        double winningAverage = 0;
+        ProKey winningKey = null;
+        for(Review r : reviews){
+            ProKey pk = new ProKey(r);
+            Average avg = new Average(r.getRating());
+            if(highestAverage.containsKey(pk)){
+                highestAverage.put(pk, avg.update(r.getRating()));
+            } else {
+                highestAverage.put(pk, avg);
+            }
+            currentAverage = avg.average();
+            if(currentAverage > winningAverage){
+                winningAverage = currentAverage;
+                winningKey = pk;
+            }
+        }
+
+        return winningKey.key();
     }
 }
