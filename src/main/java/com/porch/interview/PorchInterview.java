@@ -150,31 +150,38 @@ public class PorchInterview {
     // implement this function
     public static int getHighestRatedPro(List<Review> reviews) {
         HashMap<ProKey, LimitedRunningAverage> highestAverage = new HashMap<ProKey, LimitedRunningAverage>(); //prokey, average
-        LimitedRunningAverage a = new LimitedRunningAverage(1);
-        double currentAverage = 0;
-        double winningAverage = 0;
         ProKey winningKey = null;
         for(Review r : reviews){
             ProKey pk = new ProKey(r);
             LimitedRunningAverage avg;
-            if(highestAverage.containsKey(pk)){
-                avg = highestAverage.get(pk);
-                highestAverage.put(pk, avg.update(r.getRating()));
-            } else {
-                avg = new LimitedRunningAverage(r.getRating());
-                highestAverage.put(pk, avg);
-            }
-            currentAverage = avg.average();
-            winningAverage = winningKey != null? highestAverage.get(winningKey).average(): 0;
-            if(currentAverage > winningAverage){
-                winningAverage = currentAverage;
-                winningKey = pk;
-            }
-//            System.out.println(highestAverage.entrySet());
+            avg = updateAverageMap(highestAverage, r, pk);
+            winningKey = decideWinningAverage(highestAverage, winningKey, pk, avg);
         }
-//        System.out.println(highestAverage.get(winningKey).num_reviews());
-//        System.out.println(highestAverage.get(winningKey).average());
 
         return winningKey.key();
+    }
+
+    private static ProKey decideWinningAverage(HashMap<ProKey, LimitedRunningAverage> highestAverage, ProKey winningKey, ProKey proKey, LimitedRunningAverage avg) {
+        double currentAverage;
+        double winningAverage;
+        currentAverage = avg.average();
+        winningAverage = winningKey != null? highestAverage.get(winningKey).average(): 0;
+        if(currentAverage > winningAverage){
+            winningAverage = currentAverage;
+            winningKey = proKey;
+        }
+        return winningKey;
+    }
+
+    private static LimitedRunningAverage updateAverageMap(HashMap<ProKey, LimitedRunningAverage> highestAverage, Review review, ProKey proKey) {
+        LimitedRunningAverage avg;
+        if(highestAverage.containsKey(proKey)){
+            avg = highestAverage.get(proKey);
+            highestAverage.put(proKey, avg.update(review.getRating()));
+        } else {
+            avg = new LimitedRunningAverage(review.getRating());
+            highestAverage.put(proKey, avg);
+        }
+        return avg;
     }
 }
